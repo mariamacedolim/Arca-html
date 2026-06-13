@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    /* ── LOGIN MAIN ── */
+    .login-main {
+      flex: 1;
+      min-width: 0;
+      background-color: var(--azul-escuro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - var(--topbar-h));
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Fundo com imagem do cachorro (efeito da tela) */
+    .login-main::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('1000262875.jpg');
+      background-size: cover;
+      background-position: center top;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Padrão de patinhas igual ao hero */
+    .login-main::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.06' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+
+    /* ── CARD DO FORMULÁRIO ── */
+    .login-card {
+      position: relative;
+      z-index: 2;
+      background-color: rgba(240, 229, 212, 0.92);
+      backdrop-filter: blur(6px);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-8) var(--sp-8);
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+      color: var(--azul-escuro);
+    }
+
+    .login-card__eyebrow {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--cinza-medio);
+      margin-bottom: var(--sp-2);
+    }
+
+    .login-card__title {
+      font-size: var(--h3);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      text-align: center;
+      margin-bottom: var(--sp-6);
+    }
+
+    /* ── CAMPOS ── */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-1);
+      margin-bottom: var(--sp-4);
+    }
+
+    .form-label {
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--azul-escuro);
+    }
+
+    .form-label .required {
+      color: var(--azul-escuro);
+      margin-right: 2px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: var(--sp-3) var(--sp-4);
+      border: 1.5px solid var(--cinza-claro);
+      border-radius: var(--radius-md);
+      background-color: #fff;
+      color: var(--preto);
+      font-size: var(--body);
+      font-weight: 400;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: var(--cinza-medio);
+      font-weight: 400;
+    }
+
+    .form-input:focus {
+      border-color: var(--azul-escuro);
+      box-shadow: 0 0 0 3px rgba(22, 61, 113, 0.15);
+    }
+
+    /* ── SELECT CARGO ── */
+    .form-select-wrapper {
+      position: relative;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: var(--sp-3) var(--sp-4);
+      padding-right: var(--sp-8);
+      border: 1.5px solid var(--cinza-claro);
+      border-radius: var(--radius-md);
+      background-color: #fff;
+      color: var(--preto);
+      font-size: var(--body);
+      font-weight: 600;
+      appearance: none;
+      cursor: pointer;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .form-select:focus {
+      border-color: var(--azul-escuro);
+      box-shadow: 0 0 0 3px rgba(22, 61, 113, 0.15);
+    }
+
+    .form-select-arrow {
+      position: absolute;
+      right: var(--sp-3);
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--azul-escuro);
+    }
+
+    /* ── CHECKBOX + LINK ── */
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--sp-5);
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+
+    .form-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      font-size: var(--body-sm);
+      color: var(--azul-escuro);
+      cursor: pointer;
+    }
+
+    .form-checkbox-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--azul-escuro);
+      cursor: pointer;
+    }
+
+    .form-link {
+      font-size: var(--body-sm);
+      color: var(--azul-escuro);
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .form-link:hover { opacity: 0.75; }
+
+    /* ── BOTÃO LOGIN ── */
+    .btn-login {
+      width: 100%;
+      padding: var(--sp-3) var(--sp-4);
+      background-color: #fff;
+      color: var(--azul-escuro);
+      font-size: var(--h4);
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: background-color var(--transition), box-shadow var(--transition);
+      margin-bottom: var(--sp-4);
+    }
+
+    .btn-login:hover {
+      background-color: var(--amarelo);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ── RODAPÉ DO CARD ── */
+    .login-card__footer {
+      text-align: center;
+      font-size: var(--body-sm);
+      color: var(--azul-escuro);
+    }
+
+    .login-card__footer a {
+      font-weight: 700;
+      text-decoration: underline;
+      color: var(--azul-escuro);
+    }
+
+    .login-card__footer a:hover { opacity: 0.75; }
+
+    .login-card__required-note {
+      text-align: center;
+      font-size: var(--caption);
+      color: var(--cinza-medio);
+      margin-top: var(--sp-2);
+    }
+
+    /* ── SIDEBAR: item ativo = Entrar/Login ── */
+    .sidebar__nav-item.login-ativo {
+      background-color: var(--amarelo);
+      color: var(--azul-escuro);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <a class="sidebar__profile" href="perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item login-ativo" href="#" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN: LOGIN -->
+    <main class="login-main">
+      <div class="login-card">
+        <p class="login-card__eyebrow">Login</p>
+        <h1 class="login-card__title">Bem-Vindo de Volta!</h1>
+
+        <div class="form-group">
+          <label class="form-label" for="email">
+            <span class="required">*</span>Email:
+          </label>
+          <input
+            class="form-input"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="seuemail@exemplo.com"
+            autocomplete="email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="senha">
+            <span class="required">*</span>Senha:
+          </label>
+          <input
+            class="form-input"
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Insira sua senha (Mínimo 8 caracteres)"
+            autocomplete="current-password"
+            minlength="8"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cargo">Cargo</label>
+          <div class="form-select-wrapper">
+            <select class="form-select" id="cargo" name="cargo">
+              <option value="cidadao" selected>Cidadão</option>
+              <option value="administrador">Administrador</option>          
+            </select>
+            <svg class="form-select-arrow icon-svg" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-checkbox-label">
+            <input type="checkbox" name="lembrar" />
+            Lembrar de mim
+          </label>
+          <a class="form-link" href="#">Esqueci minha senha</a>
+        </div>
+
+        <button class="btn-login" type="button" onclick="(function(){
+  var cargo = document.getElementById('cargo').value;
+  if (cargo === 'administrador') { window.location.href = 'admin-dashboard.html'; }
+  else { window.location.href = 'index.html'; }
+})()" >Login</button>
+
+        <p class="login-card__footer">
+          Não tem uma conta? <a href="login-1.html">Cadastre-se</a>
+        </p>
+        <p class="login-card__required-note">* Itens obrigatórios</p>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+</body>
+</html>

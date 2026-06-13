@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projeto ARCA - Perfil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    .perfil-content {
+      padding: var(--sp-8);
+    }
+    .perfil-card {
+      border: 1px solid var(--amarelo);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-6);
+      margin-bottom: var(--sp-8);
+    }
+    .perfil-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-5);
+      padding-bottom: var(--sp-6);
+      border-bottom: 1px solid var(--amarelo);
+      margin-bottom: var(--sp-6);
+    }
+    .perfil-avatar {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .perfil-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .perfil-avatar__edit {
+      position: absolute;
+      top: var(--sp-1);
+      right: var(--sp-1);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--azul-escuro);
+    }
+    .perfil-info { flex: 1; }
+    .perfil-info h1 {
+      font-size: var(--h3);
+      font-weight: 700;
+      color: var(--branco-bege);
+      margin-bottom: var(--sp-2);
+    }
+    .perfil-info p {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--branco-bege);
+      margin-bottom: var(--sp-1);
+    }
+    .perfil-edit-btn {
+      background-color: var(--azul-claro);
+      color: var(--azul-escuro);
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: var(--sp-2) var(--sp-5);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+    .perfil-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-8);
+    }
+    .perfil-section h2 {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      font-size: var(--h4);
+      font-weight: 700;
+      color: var(--branco-bege);
+      text-decoration: underline;
+      margin-bottom: var(--sp-4);
+    }
+    .perfil-section h2 svg { width: 22px; height: 22px; fill: var(--amarelo); stroke: none; }
+    .lista-atividades {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--branco-bege);
+    }
+    .lista-atividades .destaque { color: var(--amarelo); }
+    .lista-agendamentos {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--branco-bege);
+    }
+    .lista-agendamentos li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--sp-3);
+    }
+    .agenda-data {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      color: var(--branco-bege);
+      font-weight: 600;
+    }
+    .agenda-data span {
+      border-bottom: 1px solid var(--amarelo);
+      width: 60px;
+      display: inline-block;
+    }
+    .agenda-data svg { width: 16px; height: 16px; stroke: var(--amarelo); }
+    .ver-tudo {
+      display: block;
+      text-align: right;
+      color: var(--amarelo);
+      font-size: var(--body-sm);
+      text-decoration: underline;
+      font-weight: 700;
+      margin-top: var(--sp-3);
+    }
+    .favoritos-card {
+      border: 1px solid var(--amarelo);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-6);
+    }
+    .favoritos-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--sp-5);
+    }
+    .favoritos-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--sp-4);
+    }
+    .favorito-item img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--sp-2);
+    }
+    .ver-perfil-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background-color: var(--amarelo);
+      color: var(--azul-escuro);
+      border: none;
+      border-radius: var(--radius-pill);
+      padding: var(--sp-1) var(--sp-2);
+      font-size: var(--caption);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    @media (max-width: 900px) {
+      .perfil-grid { grid-template-columns: 1fr; }
+      .favoritos-grid { grid-template-columns: repeat(2, 1fr); }
+      .perfil-header { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <div class="sidebar__profile">
+        <a class="sidebar__nav-item ativo" href="#" aria-current="page" style="width:100%">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--azul-escuro)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Perfil
+        </a>
+      </div>
+
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="login.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <section class="perfil-content">
+
+        <div class="perfil-card">
+          <div class="perfil-header">
+            <div class="perfil-avatar">
+              <img src="https://i.pinimg.com/736x/d5/dd/2d/d5dd2d737988a53a0c667c89a985b68e.jpg" alt="Foto de perfil de Sabrina Carvalho" />
+              <div class="perfil-avatar__edit">
+                <svg class="icon-svg" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+              </div>
+            </div>
+            <div class="perfil-info">
+              <h1>Sabrina Carvalho</h1>
+              <p>Sabrinacarvalho99@gmail.com</p>
+              <p>(27) 11005-1999</p>
+              <p>Pretty Girl Ave, ES, 13. Brasil</p>
+            </div>
+            <button class="perfil-edit-btn">Editar perfil</button>
+          </div>
+
+          <div class="perfil-grid">
+
+            <div class="perfil-section">
+              <h2>
+                <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/></svg>
+                Minhas atividades
+              </h2>
+              <ul class="lista-atividades">
+                <li>Você enviou um pedido de adoção para Mel.</li>
+                <li class="destaque">Seu cadastro foi atualizado com sucesso.</li>
+                <li class="destaque">Seu formulário foi aprovado.</li>
+                <li>Você adicionou uma nova foto ao perfil.</li>
+                <li>Atualização no processo de adoção de Thor.</li>
+              </ul>
+              <a class="ver-tudo" href="#">Ver Tudo</a>
+            </div>
+
+            <div class="perfil-section">
+              <h2>
+                <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/></svg>
+                Meus agendamentos
+              </h2>
+              <ul class="lista-agendamentos">
+                <li>
+                  <span>Castração de Luna</span>
+                  <span class="agenda-data"><span></span>
+                    <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </span>
+                </li>
+                <li>
+                  <span>Visita ao abrigo central</span>
+                  <span class="agenda-data"><span></span>
+                    <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </span>
+                </li>
+                <li>
+                  <span>Entrevista para adoção</span>
+                  <span class="agenda-data"><span></span>
+                    <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </span>
+                </li>
+                <li>
+                  <span>Vacinação antirrábica</span>
+                  <span class="agenda-data"><span></span>
+                    <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </span>
+                </li>
+                <li>
+                  <span>Atendimento com a equipe ARCA</span>
+                  <span class="agenda-data"><span></span>
+                    <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </span>
+                </li>
+              </ul>
+              <a class="ver-tudo" href="#">Ver Tudo</a>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="favoritos-card">
+          <div class="favoritos-header">
+            <h2 style="margin:0">
+              
+            </h2>
+            <a class="ver-tudo" href="#" style="margin:0">Ver Todos</a>
+          </div>
+          <div class="favoritos-grid">
+            <div class="favorito-item">
+              <img src="img/ycaro.png" alt="Beagle" />
+              <a class="ver-perfil-btn" href="adote2.html">Ver perfil</a>
+            </div>
+            <div class="favorito-item">
+              <img src="https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=300&q=80" alt="Border collie filhote" />
+              <a class="ver-perfil-btn" href="adote.html">Ver perfil</a>
+            </div>
+            <div class="favorito-item">
+              <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&q=80" alt="Cachorro preto no carro" />
+              <a class="ver-perfil-btn" href="adote.html">Ver perfil</a>
+            </div>
+            <div class="favorito-item">
+              <img src="https://images.unsplash.com/photo-1591769225440-811ad7d6eab3?w=300&q=80" alt="Cachorro cocker spaniel" />
+              <a class="ver-perfil-btn" href="adote.html">Ver perfil</a>
+            </div>
+            <div class="favorito-item">
+              <img src="https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=300&q=80" alt="Cachorro vira-lata" />
+              <a class="ver-perfil-btn" href="adote.html">Ver perfil</a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+  <script src="arca.js"></script>
+</body>
+</html>

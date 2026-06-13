@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    /* ── ADMIN SIDEBAR OVERRIDES ── */
+    .sidebar { width: 180px; }
+    .sidebar__nav-item { font-size: 0.8rem; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #c0392b;
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 16px; height: 16px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* ── DASHBOARD MAIN ── */
+    .dash {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-8);
+      min-height: calc(100vh - var(--topbar-h));
+      position: relative;
+      overflow: hidden;
+    }
+    .dash::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.05' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+
+    .dash__top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-6);
+      margin-bottom: var(--sp-6);
+      position: relative; z-index: 1;
+    }
+
+    /* ── CARD ── */
+    .dash-card {
+      background-color: var(--branco);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-6);
+      box-shadow: var(--shadow-md);
+    }
+    .dash-card--dark {
+      background-color: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--branco-bege);
+    }
+
+    /* Atividades */
+    .ativ__title {
+      font-size: var(--h4);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      text-decoration: underline;
+      margin-bottom: var(--sp-5);
+    }
+    .ativ__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-3) 0;
+      border-bottom: 1px solid var(--cinza-claro);
+      gap: var(--sp-3);
+    }
+    .ativ__row:last-child { border-bottom: none; }
+    .ativ__label {
+      font-size: var(--body);
+      font-weight: 600;
+      color: var(--azul-escuro);
+    }
+    .ativ__link {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--azul-escuro);
+      text-decoration: underline;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Alertas */
+    .alert__title {
+      font-size: var(--h4);
+      font-weight: 700;
+      color: var(--branco-bege);
+      margin-bottom: var(--sp-5);
+    }
+    .alert__item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-3);
+      padding: var(--sp-3) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .alert__item:last-child { border-bottom: none; }
+    .alert__icon {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--branco-bege);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--branco-bege);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .alert__body {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-3);
+    }
+    .alert__text {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--branco-bege);
+      line-height: 1.45;
+    }
+    .alert__link {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--branco-bege);
+      text-decoration: underline;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Atividade recente */
+    .recente {
+      position: relative; z-index: 1;
+    }
+    .recente__card {
+      background-color: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-6);
+      color: var(--branco-bege);
+    }
+    .recente__title {
+      font-size: var(--h4);
+      font-weight: 700;
+      color: var(--branco-bege);
+      margin-bottom: var(--sp-4);
+    }
+    .recente__list { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .recente__item {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--branco-bege);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .recente__footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: var(--sp-4);
+    }
+    .recente__link {
+      font-size: var(--body-sm);
+      color: var(--branco-bege);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .dash { padding: var(--sp-5) var(--sp-4); }
+      .dash__top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" aria-label="Navegação admin">
+      <a class="sidebar__profile" href="admin-perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item ativo" href="admin-dashboard.html" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Dashboard
+            <span class="badge">3</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="admin-usuarios.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Usuários
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="admin-perfil.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Perfil
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adoção
+            <span class="badge">4</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+            <span class="badge">2</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+            <span class="badge">21</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="dash">
+
+        <div class="dash__top">
+          <!-- Atividades -->
+          <div class="dash-card">
+            <p class="ativ__title">Atividades</p>
+            <div class="ativ__row">
+              <span class="ativ__label">Total de resgates pendentes</span>
+              <span class="ativ__link">Ver Tudo</span>
+            </div>
+            <div class="ativ__row">
+              <span class="ativ__label">Denúncias aguardando análise</span>
+              <span class="ativ__link">Ver Tudo</span>
+            </div>
+            <div class="ativ__row">
+              <span class="ativ__label">Solicitações de castração na fila</span>
+              <span class="ativ__link">Ver Tudo</span>
+            </div>
+            <div class="ativ__row">
+              <span class="ativ__label">Adoções em andamento</span>
+              <span class="ativ__link">Ver Tudo</span>
+            </div>
+          </div>
+
+          <!-- Alertas -->
+          <div class="dash-card dash-card--dark">
+            <p class="alert__title">Alertas prioritários</p>
+            <div class="alert__item">
+              <div class="alert__icon">!</div>
+              <div class="alert__body">
+                <span class="alert__text">3 resgates com urgência Alta sem atendimento</span>
+                <span class="alert__link">Ver Tudo</span>
+              </div>
+            </div>
+            <div class="alert__item">
+              <div class="alert__icon">!</div>
+              <div class="alert__body">
+                <span class="alert__text">2 denúncias há mais de 3 dias sem resposta</span>
+                <span class="alert__link">Ver Tudo</span>
+              </div>
+            </div>
+            <div class="alert__item">
+              <div class="alert__icon">!</div>
+              <div class="alert__body">
+                <span class="alert__text">1 solicitação de castração com data vencida</span>
+                <span class="alert__link">Ver Tudo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Atividade recente -->
+        <div class="recente">
+          <div class="recente__card">
+            <p class="recente__title">Atividade recente</p>
+            <div class="recente__list">
+              <span class="recente__item">Novo resgate registrado – há 12 min</span>
+              <span class="recente__item">Denúncia #0042 marcada como em análise – há 1h</span>
+              <span class="recente__item">Adoção de Luna aprovada – há 3h</span>
+              <span class="recente__item">Novo colaborador cadastrado – há 5h</span>
+              <span class="recente__item">Castração de Thor agendada – há 7h</span>
+            </div>
+            <div class="recente__footer">
+              <span class="recente__link">Ver mais</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+</body>
+</html>

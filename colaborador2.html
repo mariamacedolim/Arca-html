@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colaborador — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    /* ── COLABORADOR PAGE ── */
+    .colaborador-section {
+      padding: var(--sp-10) var(--sp-8);
+      position: relative;
+      overflow: hidden;
+      min-height: calc(100vh - var(--topbar-h));
+    }
+    .colaborador-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.06' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+
+    .colaborador-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      color: var(--amarelo);
+      margin-bottom: var(--sp-8);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background-color: var(--branco-bege);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-8);
+      box-shadow: var(--shadow-lg);
+      max-width: 780px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-card__header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-6);
+    }
+
+    .form-card__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background-color: var(--cinza-claro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--azul-escuro);
+      flex-shrink: 0;
+    }
+
+    .form-card__title {
+      font-size: var(--h4);
+      font-weight: 700;
+      color: var(--azul-escuro);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-5);
+    }
+
+    .form-group label {
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--azul-escuro);
+    }
+
+    .form-group input {
+      background-color: transparent;
+      border: 1.5px solid var(--cinza-claro);
+      border-radius: var(--radius-md);
+      padding: var(--sp-3) var(--sp-4);
+      font-size: var(--body);
+      color: var(--azul-escuro);
+      outline: none;
+      transition: border-color var(--transition);
+      width: 100%;
+    }
+
+    .form-group input:focus {
+      border-color: var(--azul-escuro);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-5);
+    }
+
+    .form-divider {
+      border: none;
+      border-top: 1.5px dashed var(--amarelo);
+      margin: var(--sp-4) 0 var(--sp-6);
+      opacity: 0.6;
+    }
+
+    .form-card__footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: var(--sp-6);
+    }
+
+    .btn-enviar {
+      background-color: var(--azul-escuro);
+      color: var(--branco-bege);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: var(--sp-3) var(--sp-8);
+      font-size: var(--body);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color var(--transition), transform var(--transition);
+    }
+
+    .btn-enviar:hover {
+      background-color: #0f2d56;
+      transform: scale(1.03);
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .colaborador-section { padding: var(--sp-8) var(--sp-4); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <a class="sidebar__profile" href="perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="login.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="colaborador.html" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <section class="colaborador-section">
+
+        <h1 class="colaborador-title">🐾 Colabore conosco</h1>
+
+        <div class="form-card">
+          <div class="form-card__header">
+            <div class="form-card__icon">
+              <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <span class="form-card__title">Preencha o Formulário de Colaborador</span>
+          </div>
+
+          <div class="form-group">
+            <label for="nome">Nome (Ou nome da ONG</label>
+            <input type="text" id="nome" name="nome" autocomplete="off" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone</label>
+              <input type="tel" id="telefone" name="telefone" autocomplete="off" />
+            </div>
+          </div>
+
+          <hr class="form-divider" />
+
+          <div class="form-group">
+            <label for="endereco">Endereço completo</label>
+            <input type="text" id="endereco" name="endereco" autocomplete="off" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="referencia">Ponto de Referência</label>
+              <input type="text" id="referencia" name="referencia" autocomplete="off" />
+            </div>
+            <div class="form-group">
+              <label for="cep">CEP</label>
+              <input type="text" id="cep" name="cep" autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="interesse">Qual seu interesse em trabalhar conosco</label>
+            <input type="text" id="interesse" name="interesse" autocomplete="off" />
+          </div>
+
+          <div class="form-card__footer">
+            <button class="btn-enviar">Enviar</button>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+</body>
+</html>

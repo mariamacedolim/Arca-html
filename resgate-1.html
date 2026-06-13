@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resgate e Denúncia — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    /* ── PAGE TABS ── */
+    .page-tabs {
+      display: flex;
+      gap: var(--sp-2);
+    }
+    .page-tab {
+      padding: var(--sp-2) var(--sp-5);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--branco-bege);
+      background: transparent;
+      color: var(--branco-bege);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color var(--transition), color var(--transition);
+    }
+    .page-tab.ativo, .page-tab:hover {
+      background-color: var(--branco-bege);
+      color: var(--azul-escuro);
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-6) var(--sp-8) var(--sp-4);
+      flex-wrap: wrap;
+      gap: var(--sp-4);
+    }
+    .page-header__title {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      font-size: var(--h2);
+      font-weight: 700;
+      color: var(--amarelo);
+    }
+    .page-header__title svg { color: var(--amarelo); }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background-color: var(--branco-bege);
+      border-radius: var(--radius-xl);
+      margin: 0 var(--sp-8) var(--sp-8);
+      padding: var(--sp-6) var(--sp-8);
+      color: var(--azul-escuro);
+      box-shadow: var(--shadow-md);
+    }
+    .form-card__heading {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      font-size: var(--h5);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      margin-bottom: var(--sp-6);
+      padding-bottom: var(--sp-4);
+      border-bottom: 1px solid var(--cinza-claro);
+    }
+    .form-card__heading svg { color: var(--cinza-medio); }
+
+    /* ── FORM SECTION TITLE ── */
+    .form-section-title {
+      font-size: var(--body);
+      font-weight: 700;
+      color: var(--amarelo-dark, #B88A00);
+      margin-bottom: var(--sp-4);
+    }
+    /* override amarelo para texto azul escuro nos títulos de seção dentro do card */
+    .form-card .form-section-title {
+      color: var(--azul-escuro);
+    }
+
+    /* ── FORM FIELDS ── */
+    .form-group {
+      margin-bottom: var(--sp-5);
+    }
+    .form-label {
+      display: block;
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--azul-escuro);
+      margin-bottom: var(--sp-2);
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: var(--sp-3) var(--sp-4);
+      border: 1.5px solid var(--cinza-claro);
+      border-radius: var(--radius-md);
+      background-color: var(--azul-escuro);
+      color: var(--branco-bege);
+      font-size: var(--body-sm);
+      font-weight: 600;
+      transition: border-color var(--transition);
+      appearance: none;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--amarelo);
+    }
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23F0E5D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--sp-3) center;
+      padding-right: var(--sp-8);
+      cursor: pointer;
+    }
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* ── ROW GRID ── */
+    .form-row {
+      display: grid;
+      gap: var(--sp-4);
+    }
+    .form-row--2 { grid-template-columns: 1fr 1fr; }
+    .form-row--3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    /* ── LOCATION BUTTON ── */
+    .btn-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-2);
+      width: 100%;
+      padding: var(--sp-3) var(--sp-4);
+      margin-top: var(--sp-3);
+      background-color: var(--azul-escuro);
+      color: var(--branco-bege);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    .btn-location:hover { opacity: 0.85; }
+
+    /* ── DIVIDER ── */
+    .form-divider {
+      border: none;
+      border-top: 1.5px dashed var(--amarelo);
+      margin: var(--sp-6) 0;
+      opacity: 0.5;
+    }
+
+    /* ── UPLOAD AREA ── */
+    .upload-area {
+      border: 2px dashed var(--cinza-claro);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-8) var(--sp-4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-3);
+      cursor: pointer;
+      transition: border-color var(--transition), background-color var(--transition);
+      background-color: rgba(255,255,255,0.03);
+    }
+    .upload-area:hover {
+      border-color: var(--amarelo);
+      background-color: rgba(255,211,84,0.05);
+    }
+    .upload-area svg { color: var(--azul-escuro); }
+    .upload-area__text {
+      text-align: center;
+      font-size: var(--body-sm);
+      color: var(--azul-escuro);
+      line-height: 1.8;
+    }
+    .upload-area__text span {
+      color: var(--amarelo);
+    }
+    .upload-area input[type="file"] { display: none; }
+    .btn-upload {
+      padding: var(--sp-2) var(--sp-6);
+      background-color: var(--azul-escuro);
+      color: var(--branco-bege);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: var(--sp-2);
+    }
+
+    /* ── URGENCY BUTTONS ── */
+    .urgency-group {
+      display: flex;
+      gap: var(--sp-4);
+      flex-wrap: wrap;
+      margin-top: var(--sp-3);
+    }
+    .urgency-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: var(--sp-3) var(--sp-4);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .urgency-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .urgency-btn.baixo  { background-color: var(--sucesso); }
+    .urgency-btn.medio  { background-color: var(--alerta); }
+    .urgency-btn.alto   { background-color: var(--erro); }
+    .urgency-btn.ativo  { outline: 3px solid var(--azul-escuro); outline-offset: 2px; }
+
+    /* ── NAV ARROWS ── */
+    .form-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--sp-6);
+    }
+    .btn-nav {
+      background: none;
+      border: none;
+      color: var(--azul-escuro);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      padding: var(--sp-2);
+      border-radius: 50%;
+      transition: background-color var(--transition);
+    }
+    .btn-nav:hover { background-color: var(--azul-claro); }
+    .btn-nav svg { width: 24px; height: 24px; }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-submit {
+      padding: var(--sp-3) var(--sp-8);
+      background-color: var(--azul-escuro);
+      color: var(--branco-bege);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    .btn-submit:hover { opacity: 0.85; }
+
+    /* ── STEP INDICATORS ── */
+    .step-indicators {
+      display: flex;
+      justify-content: center;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-4);
+    }
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--cinza-claro);
+      cursor: pointer;
+      transition: background-color var(--transition);
+    }
+    .step-dot.ativo { background-color: var(--azul-escuro); }
+
+    /* ── FORM STEPS ── */
+    .form-step { display: none; }
+    .form-step.ativo { display: block; }
+
+    /* ── WATERMARK ── */
+    .page-watermark {
+      position: absolute;
+      bottom: var(--sp-4);
+      right: var(--sp-6);
+      font-size: var(--caption);
+      color: rgba(240,229,212,.25);
+      font-family: var(--font-logo);
+      pointer-events: none;
+    }
+
+    /* ── ACOMPANHAR SCREEN ── */
+    .acompanhar-screen { display: none; padding: 0 var(--sp-8) var(--sp-8); }
+    .acompanhar-screen.ativo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start; }
+
+    .acomp-card {
+      background-color: var(--branco-bege);
+      border-radius: var(--radius-xl);
+      padding: var(--sp-6) var(--sp-7);
+      color: var(--azul-escuro);
+      box-shadow: var(--shadow-md);
+    }
+    .acomp-card__title {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      font-size: var(--h4);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      margin-bottom: var(--sp-5);
+      padding-bottom: var(--sp-4);
+      border-bottom: 1.5px dashed rgba(22,61,113,0.2);
+    }
+
+    /* Search row */
+    .search-row {
+      display: flex;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-6);
+    }
+    .search-input {
+      flex: 1;
+      padding: var(--sp-3) var(--sp-4);
+      border: 2px solid var(--azul-escuro);
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--azul-escuro);
+      font-size: var(--body-sm);
+      font-weight: 600;
+    }
+    .search-input::placeholder { color: var(--cinza-medio); font-weight: 400; }
+    .search-input:focus { outline: none; border-color: var(--amarelo); }
+    .btn-buscar {
+      padding: var(--sp-3) var(--sp-6);
+      background-color: var(--azul-escuro);
+      color: var(--branco-bege);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity var(--transition);
+      white-space: nowrap;
+    }
+    .btn-buscar:hover { opacity: 0.85; }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; gap: 0; border: 1.5px solid var(--azul-escuro); border-radius: var(--radius-lg); overflow: hidden; }
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      padding: var(--sp-4) var(--sp-5);
+      border-bottom: 1px solid rgba(22,61,113,0.12);
+      background: transparent;
+      transition: background-color var(--transition);
+    }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-item:hover { background-color: rgba(22,61,113,0.04); }
+    .timeline-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .timeline-icon.concluido  { background-color: var(--sucesso); }
+    .timeline-icon.pendente   { background-color: var(--cinza-claro); }
+    .timeline-icon svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .timeline-icon.pendente svg { stroke: var(--cinza-medio); }
+    .timeline-info { flex: 1; }
+    .timeline-info__label { font-size: var(--body-sm); font-weight: 700; color: var(--azul-escuro); }
+    .timeline-info__date  { font-size: var(--caption); font-weight: 400; color: var(--cinza-medio); margin-top: 2px; }
+
+    /* Emergency contacts */
+    .emergency-list { display: flex; flex-direction: column; gap: var(--sp-4); }
+    .emergency-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      padding: var(--sp-4) var(--sp-5);
+      border: 1.5px solid var(--azul-escuro);
+      border-radius: var(--radius-lg);
+      transition: background-color var(--transition);
+      cursor: pointer;
+    }
+    .emergency-item:hover { background-color: rgba(22,61,113,0.06); }
+    .emergency-item__icon { flex-shrink: 0; color: var(--azul-escuro); }
+    .emergency-item__info { flex: 1; }
+    .emergency-item__name { font-size: var(--body); font-weight: 700; color: var(--azul-escuro); }
+    .emergency-item__desc { font-size: var(--caption); font-weight: 400; color: var(--cinza-medio); margin-top: 2px; }
+    .emergency-item__number { font-size: var(--h4); font-weight: 700; margin-left: auto; }
+    .emergency-item__number.verde  { color: var(--sucesso); }
+    .emergency-item__number.azul   { color: var(--azul-escuro); }
+    .emergency-item__number.verde2 { color: #1B6E3B; }
+
+    @media (max-width: 700px) {
+      .form-card { margin: 0 var(--sp-4) var(--sp-6); padding: var(--sp-5) var(--sp-4); }
+      .page-header { padding: var(--sp-4); }
+      .form-row--2, .form-row--3 { grid-template-columns: 1fr; }
+      .urgency-group { gap: var(--sp-3); }
+      .acompanhar-screen.ativo { grid-template-columns: 1fr; padding: 0 var(--sp-4) var(--sp-6); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <a class="sidebar__profile" href="perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="login.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="resgate-1.html" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content" style="position:relative;">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-header__title" id="page-title-wrap">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="width:28px;height:28px;color:var(--amarelo)">
+            <text x="0" y="22" font-size="22">🐾</text>
+          </svg>
+          <span id="page-title">Resgate</span>
+        </h1>
+        <div class="page-tabs">
+          <button class="page-tab ativo" onclick="switchTab(this, 'resgate')">Resgate</button>
+          <button class="page-tab" onclick="switchTab(this, 'denuncia')">Denúncia</button>
+          <button class="page-tab" onclick="switchTab(this, 'acompanhar')">Acompanhar</button>
+        </div>
+      </div>
+
+      <!-- FORM CARD -->
+      <div class="form-card">
+
+        <div class="form-card__heading">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Preencha o Formulário de Solicitação de Resgate
+        </div>
+
+        <!-- STEP INDICATORS -->
+        <div class="step-indicators">
+          <div class="step-dot ativo" onclick="goToStep(0)"></div>
+          <div class="step-dot" onclick="goToStep(1)"></div>
+          <div class="step-dot" onclick="goToStep(2)"></div>
+        </div>
+
+        <!-- STEP 1: Localização + Animal -->
+        <div class="form-step ativo" id="step-0">
+
+          <div class="form-group">
+            <label class="form-label" for="endereco">Endereço completo</label>
+            <input class="form-input" type="text" id="endereco" placeholder="" />
+          </div>
+
+          <div class="form-row form-row--2">
+            <div class="form-group">
+              <label class="form-label" for="referencia">Ponto de Referência</label>
+              <input class="form-input" type="text" id="referencia" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cep">CEP</label>
+              <input class="form-input" type="text" id="cep" placeholder="" />
+            </div>
+          </div>
+
+          <button class="btn-location" type="button">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/></svg>
+            Usar minha localização atual
+          </button>
+
+          <hr class="form-divider" />
+
+          <p class="form-section-title" style="color:var(--azul-escuro);font-weight:700;font-size:var(--body);">Informações do animal</p>
+
+          <div class="form-row form-row--3">
+            <div class="form-group">
+              <label class="form-label" for="especie">Espécie</label>
+              <select class="form-select" id="especie">
+                <option value="">Selecione</option>
+                <option>Cão</option>
+                <option>Gato</option>
+                <option>Ave</option>
+                <option>Outro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="quantidade">Quantidade</label>
+              <select class="form-select" id="quantidade">
+                <option value="">Selecione</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="porte">Porte</label>
+              <select class="form-select" id="porte">
+                <option value="">Selecione</option>
+                <option>Pequeno</option>
+                <option>Médio</option>
+                <option>Grande</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="condicao">Condição observada</label>
+            <select class="form-select" id="condicao">
+              <option value="">Selecione</option>
+              <option>Ferido</option>
+              <option>Doente</option>
+              <option>Abandonado</option>
+              <option>Em risco</option>
+              <option>Outro</option>
+            </select>
+          </div>
+
+          <div class="form-nav">
+            <span></span>
+            <button class="btn-nav" type="button" onclick="nextStep()" aria-label="Próxima etapa">
+              <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+
+        </div><!-- /step-0 -->
+
+        <!-- STEP 2: Descrição + Fotos -->
+        <div class="form-step" id="step-1">
+
+          <div class="form-group">
+            <label class="form-label" for="descricao">Descrição detalhada</label>
+            <textarea class="form-textarea" id="descricao" rows="5"></textarea>
+          </div>
+
+          <hr class="form-divider" />
+
+          <p class="form-section-title" style="color:var(--azul-escuro);font-weight:700;font-size:var(--body);">Fotos e vídeos</p>
+
+          <label class="upload-area" for="upload-files">
+            <svg class="icon-svg" viewBox="0 0 24 24" style="width:40px;height:40px;color:var(--azul-escuro)">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <div class="upload-area__text">
+              Arraste o arquivo aqui<br>
+              Ou<br>
+              <span>Clique para selecionar</span>
+            </div>
+            <button class="btn-upload" type="button">Enviar</button>
+            <input type="file" id="upload-files" accept="image/*,video/*" multiple />
+          </label>
+
+          <div class="form-nav">
+            <button class="btn-nav" type="button" onclick="prevStep()" aria-label="Etapa anterior">
+              <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="btn-nav" type="button" onclick="nextStep()" aria-label="Próxima etapa">
+              <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+
+        </div><!-- /step-1 -->
+
+        <!-- STEP 3: Dados do Solicitante + Urgência -->
+        <div class="form-step" id="step-2">
+
+          <p class="form-section-title" style="color:var(--azul-escuro);font-weight:700;font-size:var(--body);margin-bottom:var(--sp-5);">Dados do Solicitante</p>
+
+          <div class="form-group">
+            <label class="form-label" for="nome">Nome</label>
+            <input class="form-input" type="text" id="nome" placeholder="" />
+          </div>
+
+          <div class="form-row form-row--2">
+            <div class="form-group">
+              <label class="form-label" for="email">Email</label>
+              <input class="form-input" type="email" id="email" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="telefone">Telefone</label>
+              <input class="form-input" type="tel" id="telefone" placeholder="" />
+            </div>
+          </div>
+
+          <hr class="form-divider" />
+
+          <p class="form-section-title" style="color:var(--azul-escuro);font-weight:700;font-size:var(--body);">Nível de Urgência</p>
+
+          <div class="urgency-group">
+            <button class="urgency-btn baixo" type="button" onclick="selectUrgency(this)">Baixo</button>
+            <button class="urgency-btn medio" type="button" onclick="selectUrgency(this)">Médio</button>
+            <button class="urgency-btn alto"  type="button" onclick="selectUrgency(this)">Alto</button>
+          </div>
+
+          <div class="form-nav">
+            <button class="btn-nav" type="button" onclick="prevStep()" aria-label="Etapa anterior">
+              <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="btn-submit" type="button">Enviar</button>
+          </div>
+
+        </div><!-- /step-2 -->
+
+      </div><!-- /form-card -->
+
+      <!-- ACOMPANHAR SCREEN -->
+      <div class="acompanhar-screen" id="acompanhar-screen">
+
+        <!-- Card: Protocolo -->
+        <div class="acomp-card">
+          <div class="acomp-card__title">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Acompanhar protocolo
+          </div>
+
+          <div class="search-row">
+            <input class="search-input" type="text" id="protocolo-input" placeholder="Ex: ARCA-14042026" />
+            <button class="btn-buscar" type="button" onclick="buscarProtocolo()">Buscar</button>
+          </div>
+
+          <div class="timeline" id="timeline">
+            <div class="timeline-item">
+              <div class="timeline-icon concluido">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="timeline-info">
+                <div class="timeline-info__label">Recebido</div>
+                <div class="timeline-info__date">14/04/2026 às 19:12</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon concluido">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="timeline-info">
+                <div class="timeline-info__label">Em análise</div>
+                <div class="timeline-info__date">15/04/2026 às 08:16</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon concluido">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="timeline-info">
+                <div class="timeline-info__label">Em atendimento</div>
+                <div class="timeline-info__date">19/04/2026 às 18:10</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon pendente">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="timeline-info">
+                <div class="timeline-info__label">Concluído</div>
+                <div class="timeline-info__date">pendente</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: Contatos de emergência -->
+        <div class="acomp-card">
+          <div class="acomp-card__title">
+            <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--erro)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Contatos de emergência
+          </div>
+
+          <div class="emergency-list">
+            <div class="emergency-item">
+              <div class="emergency-item__icon">
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="emergency-item__info">
+                <div class="emergency-item__name">Polícia Militar</div>
+                <div class="emergency-item__desc">Crimes em andamento</div>
+              </div>
+              <div class="emergency-item__number azul">190</div>
+            </div>
+
+            <div class="emergency-item">
+              <div class="emergency-item__icon">
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <div class="emergency-item__info">
+                <div class="emergency-item__name">SAMU</div>
+                <div class="emergency-item__desc">Emergências gerais</div>
+              </div>
+              <div class="emergency-item__number verde">192</div>
+            </div>
+
+            <div class="emergency-item">
+              <div class="emergency-item__icon">
+                <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              </div>
+              <div class="emergency-item__info">
+                <div class="emergency-item__name">IBAMA</div>
+                <div class="emergency-item__desc">Animais Silvestres</div>
+              </div>
+              <div class="emergency-item__number verde2">0800</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /acompanhar-screen -->
+
+      <span class="page-watermark">ProjetoArca.com.br</span>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+  <script>
+    // ── STEP NAVIGATION ──
+    let currentStep = 0;
+    const totalSteps = 3;
+
+    function updateStepView() {
+      document.querySelectorAll('.form-step').forEach((el, i) => {
+        el.classList.toggle('ativo', i === currentStep);
+      });
+      document.querySelectorAll('.step-dot').forEach((dot, i) => {
+        dot.classList.toggle('ativo', i === currentStep);
+      });
+    }
+
+    function nextStep() {
+      if (currentStep < totalSteps - 1) {
+        currentStep++;
+        updateStepView();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        updateStepView();
+      }
+    }
+
+    function goToStep(i) {
+      currentStep = i;
+      updateStepView();
+    }
+
+    // ── TABS ──
+    const tabTitles = { resgate: 'Resgate', denuncia: 'Denuncia', acompanhar: 'Acompanhar' };
+
+    function switchTab(btn, tab) {
+      document.querySelectorAll('.page-tab').forEach(b => b.classList.remove('ativo'));
+      btn.classList.add('ativo');
+
+      const formCard  = document.querySelector('.form-card');
+      const stepDots  = document.querySelector('.step-indicators');
+      const acompTela = document.getElementById('acompanhar-screen');
+      const pageTitle = document.getElementById('page-title');
+
+      if (tab === 'acompanhar') {
+        formCard.style.display = 'none';
+        stepDots.style.display = 'none';
+        acompTela.classList.add('ativo');
+        pageTitle.textContent  = 'Acompanhar';
+      } else {
+        formCard.style.display = '';
+        stepDots.style.display = '';
+        acompTela.classList.remove('ativo');
+        pageTitle.textContent  = tab.charAt(0).toUpperCase() + tab.slice(1);
+      }
+    }
+
+    // ── BUSCAR PROTOCOLO ──
+    function buscarProtocolo() {
+      const val = document.getElementById('protocolo-input').value.trim();
+      if (!val) { document.getElementById('protocolo-input').focus(); return; }
+      const tl = document.getElementById('timeline');
+      tl.style.transition = 'opacity 0.3s';
+      tl.style.opacity = '0.3';
+      setTimeout(() => { tl.style.opacity = '1'; }, 500);
+    }
+
+    // ── URGENCY ──
+    function selectUrgency(btn) {
+      document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('ativo'));
+      btn.classList.add('ativo');
+    }
+  </script>
+
+</body>
+</html>

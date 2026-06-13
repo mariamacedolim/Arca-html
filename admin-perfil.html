@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil do Usuário — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    .sidebar { width: 180px; }
+    .sidebar__nav-item { font-size: 0.8rem; }
+    .badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      background-color: #c0392b; color: #fff;
+      font-size: 0.6rem; font-weight: 700;
+      border-radius: 50%; width: 16px; height: 16px;
+      margin-left: auto; flex-shrink: 0;
+    }
+
+    .perfil-main {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-6) var(--sp-8);
+      min-height: calc(100vh - var(--topbar-h));
+      position: relative;
+    }
+    .perfil-main::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.05' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat; pointer-events: none;
+    }
+
+    .perfil-card {
+      background-color: var(--azul-escuro);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      position: relative; z-index: 1;
+      max-width: 860px;
+    }
+
+    /* ── INFO DO USUÁRIO ── */
+    .user-info {
+      background-color: var(--azul-escuro);
+      border-bottom: 2px solid rgba(255,255,255,0.15);
+      padding: var(--sp-5) var(--sp-6);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-6);
+    }
+    .user-info__photo {
+      width: 90px; height: 90px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background-color: var(--cinza-claro);
+      flex-shrink: 0;
+    }
+    .user-info__photo img { width: 100%; height: 100%; object-fit: cover; }
+    .user-info__details { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-1) var(--sp-8); }
+    .user-info__name {
+      grid-column: 1 / -1;
+      font-size: var(--h3);
+      font-weight: 700;
+      color: var(--amarelo);
+    }
+    .user-info__line {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--branco-bege);
+    }
+
+    /* ── BODY GRID ── */
+    .perfil-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid rgba(255,255,255,0.15);
+    }
+    .perfil-col {
+      padding: var(--sp-5) var(--sp-6);
+    }
+    .perfil-col:first-child {
+      border-right: 2px solid rgba(255,255,255,0.15);
+    }
+    .section-title {
+      font-size: var(--body-lg);
+      font-weight: 700;
+      color: var(--branco-bege);
+      text-decoration: underline;
+      margin-bottom: var(--sp-4);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+    .section-title .paw { font-size: 1.1em; }
+
+    /* Histórico */
+    .historico__list { display: flex; flex-direction: column; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+    .historico__item {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--branco-bege);
+      line-height: 1.5;
+    }
+    .historico__item--destaque { color: var(--amarelo); }
+    .ver-tudo {
+      display: flex; justify-content: flex-end;
+      font-size: var(--body-sm); color: var(--branco-bege);
+      text-decoration: underline; cursor: pointer;
+    }
+
+    /* Agendamentos */
+    .agenda__list { display: flex; flex-direction: column; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+    .agenda__row {
+      display: flex; align-items: center; gap: var(--sp-3);
+    }
+    .agenda__label {
+      font-size: var(--body-sm); font-weight: 600; color: var(--branco-bege);
+      flex: 1;
+    }
+    .agenda__date {
+      font-size: var(--body-sm); color: var(--cinza-claro);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: var(--radius-sm);
+      padding: 2px var(--sp-2);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .agenda__actions { display: flex; gap: var(--sp-1); align-items: center; }
+    .agenda__btn {
+      width: 20px; height: 20px; border-radius: 3px;
+      border: none; cursor: pointer;
+      font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .agenda__btn--x   { background-color: #c0392b; color: #fff; }
+    .agenda__btn--ok  { background-color: #2E7D32; color: #fff; }
+
+    /* ── PEDIDOS DE ADOÇÃO ── */
+    .pedidos { padding: var(--sp-5) var(--sp-6); }
+    .pedidos-table { width: 100%; border-collapse: collapse; margin-top: var(--sp-4); }
+    .pedidos-table th {
+      background-color: var(--branco-bege);
+      color: var(--azul-escuro);
+      font-size: var(--body-sm); font-weight: 700;
+      padding: var(--sp-3) var(--sp-4);
+      text-align: center;
+      border-right: 1px solid var(--cinza-claro);
+    }
+    .pedidos-table th:last-child { border-right: none; }
+    .pedidos-table td {
+      padding: var(--sp-3) var(--sp-4);
+      text-align: center;
+      font-size: var(--body-sm); font-weight: 700;
+      color: var(--azul-escuro);
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .pedidos-table td:last-child { border-right: none; }
+    .pedidos-table tbody tr { background-color: var(--amarelo); }
+    .pedidos__footer { display: flex; justify-content: flex-end; margin-top: var(--sp-3); }
+
+    @media (max-width: 900px) {
+      .perfil-main { padding: var(--sp-4); }
+      .perfil-body { grid-template-columns: 1fr; }
+      .perfil-col:first-child { border-right: none; border-bottom: 2px solid rgba(255,255,255,0.15); }
+      .user-info { flex-wrap: wrap; }
+      .user-info__details { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" aria-label="Navegação admin">
+      <a class="sidebar__profile" href="admin-perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="admin-dashboard.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Dashboard
+            <span class="badge">3</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="admin-usuarios.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Usuários
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="admin-perfil.html" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Perfil
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adoção
+            <span class="badge">4</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+            <span class="badge">2</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+            <span class="badge">21</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="perfil-main">
+        <div class="perfil-card">
+
+          <!-- Dados do usuário -->
+          <div class="user-info">
+            <div class="user-info__photo">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="Fulaninho da Silva" />
+            </div>
+            <div class="user-info__details">
+              <span class="user-info__name">Fulaninho da Silva</span>
+              <span class="user-info__line">fulaninhodasilva@gmail.com</span>
+              <span class="user-info__line">CPF: 000.000.000-00</span>
+              <span class="user-info__line">(27) 1006-2008</span>
+              <span class="user-info__line">RG: 0000000</span>
+              <span class="user-info__line">Rua Lugar nenhum 0,  NH, País de Ninguém</span>
+            </div>
+          </div>
+
+          <!-- Histórico + Agendamentos -->
+          <div class="perfil-body">
+            <!-- Histórico -->
+            <div class="perfil-col">
+              <p class="section-title"><span class="paw">🐾</span> Histórico de atividades</p>
+              <div class="historico__list">
+                <span class="historico__item">Fulaninho enviou um pedido de adoção para Mel.</span>
+                <span class="historico__item historico__item--destaque">O cadastro de fulaninho foi atualizado.</span>
+                <span class="historico__item historico__item--destaque">Fulaninho teve seu formulário aprovado.</span>
+                <span class="historico__item">Fulaninho adicionou uma nova foto ao perfil.</span>
+                <span class="historico__item">Atualização no processo de adoção de Thor.</span>
+              </div>
+              <div class="ver-tudo"><span>Ver Tudo</span></div>
+            </div>
+
+            <!-- Agendamentos -->
+            <div class="perfil-col">
+              <p class="section-title"><span class="paw">🐾</span> Agendamentos</p>
+              <div class="agenda__list">
+                <div class="agenda__row">
+                  <span class="agenda__label">Castração de Luna</span>
+                  <div class="agenda__date">
+                    <span>/ /</span>
+                    <svg class="icon-svg" viewBox="0 0 24 24" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="agenda__actions">
+                    <button class="agenda__btn agenda__btn--x">✕</button>
+                    <button class="agenda__btn agenda__btn--ok">✓</button>
+                  </div>
+                </div>
+                <div class="agenda__row">
+                  <span class="agenda__label">Visita ao abrigo central</span>
+                  <div class="agenda__date"><span>/ /</span><svg class="icon-svg" viewBox="0 0 24 24" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                  <div class="agenda__actions">
+                    <button class="agenda__btn agenda__btn--x">✕</button>
+                    <button class="agenda__btn agenda__btn--ok">✓</button>
+                  </div>
+                </div>
+                <div class="agenda__row">
+                  <span class="agenda__label">Entrevista para adoção</span>
+                  <div class="agenda__date"><span>/ /</span><svg class="icon-svg" viewBox="0 0 24 24" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                  <div class="agenda__actions">
+                    <button class="agenda__btn agenda__btn--x">✕</button>
+                    <button class="agenda__btn agenda__btn--ok">✓</button>
+                  </div>
+                </div>
+                <div class="agenda__row">
+                  <span class="agenda__label">Vacinação antirrábica</span>
+                  <div class="agenda__date"><span>/ /</span><svg class="icon-svg" viewBox="0 0 24 24" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                  <div class="agenda__actions">
+                    <button class="agenda__btn agenda__btn--x">✕</button>
+                    <button class="agenda__btn agenda__btn--ok">✓</button>
+                  </div>
+                </div>
+                <div class="agenda__row">
+                  <span class="agenda__label">Atendimento com a equipe ARCA</span>
+                  <div class="agenda__date"><span>/ /</span><svg class="icon-svg" viewBox="0 0 24 24" style="width:14px;height:14px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                  <div class="agenda__actions">
+                    <button class="agenda__btn agenda__btn--x">✕</button>
+                    <button class="agenda__btn agenda__btn--ok">✓</button>
+                  </div>
+                </div>
+              </div>
+              <div class="ver-tudo"><span>Ver Tudo</span></div>
+            </div>
+          </div>
+
+          <!-- Pedidos de adoção -->
+          <div class="pedidos">
+            <p class="section-title"><span class="paw">🐾</span> Pedidos de adoção</p>
+            <table class="pedidos-table">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Idade</th>
+                  <th>Raça</th>
+                  <th>Porte</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#30459</td>
+                  <td>2</td>
+                  <td>Vira-Lata</td>
+                  <td>Médio</td>
+                  <td>Em andamento</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pedidos__footer">
+              <span class="ver-tudo" style="justify-content:flex-end"><span>Ver Tudo</span></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+</body>
+</html>

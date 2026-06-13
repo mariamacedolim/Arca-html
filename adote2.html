@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adote — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    /* ── ADOTE SECTION ── */
+    .adote {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-10) var(--sp-8);
+      min-height: calc(100vh - var(--topbar-h));
+      position: relative;
+      overflow: hidden;
+    }
+    .adote::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.06' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+
+    /* ── CARD BASE ── */
+    .adote-card {
+      background-color: var(--branco);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      max-width: 760px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── VIEW 1: PET PROFILE ── */
+    #view-pet { display: block; }
+    .pet__top {
+      padding: var(--sp-6) var(--sp-6) 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-6);
+      align-items: start;
+    }
+    .pet__paw {
+      font-size: 2.2rem;
+      margin-bottom: var(--sp-3);
+      display: block;
+    }
+    .pet__photo {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background-color: var(--cinza-claro);
+    }
+    .pet__photo img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .pet__info { display: flex; flex-direction: column; gap: var(--sp-4); }
+    .pet__desc {
+      font-size: var(--body);
+      font-weight: 600;
+      color: var(--azul-escuro);
+      line-height: 1.7;
+    }
+    .pet__tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+    .pet__tag {
+      padding: var(--sp-1) var(--sp-4);
+      border-radius: var(--radius-pill);
+      font-size: var(--body-sm);
+      font-weight: 700;
+    }
+    .pet__tag--teal    { background-color: #2B7A6F; color: #fff; }
+    .pet__tag--amarelo { background-color: var(--amarelo); color: var(--azul-escuro); }
+    .pet__tag--dark    { background-color: var(--azul-escuro); color: #fff; }
+
+    .pet__bottom {
+      padding: var(--sp-5) var(--sp-6) var(--sp-6);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      gap: var(--sp-4);
+    }
+    .pet__name-block { display: flex; flex-direction: column; gap: 2px; }
+    .pet__name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--azul-escuro);
+    }
+    .pet__breed {
+      font-size: var(--body-lg);
+      font-weight: 600;
+      color: var(--azul-escuro);
+    }
+    .pet__meta { text-align: center; }
+    .pet__age {
+      font-size: var(--body-lg);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      display: block;
+    }
+    .pet__fav {
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--cinza-escuro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-1);
+      cursor: pointer;
+      margin-top: 2px;
+    }
+    .btn-interesse {
+      background-color: var(--amarelo);
+      color: var(--azul-escuro);
+      border: none;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: var(--h4);
+      padding: var(--sp-4) var(--sp-6);
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition);
+      width: 100%;
+    }
+    .btn-interesse:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ── VIEW 2: QUESTIONÁRIO ── */
+    #view-quiz { display: none; }
+    .quiz__header {
+      margin-bottom: var(--sp-6);
+      position: relative;
+      z-index: 1;
+    }
+    .quiz__title {
+      font-size: clamp(1.5rem, 3.5vw, var(--h2));
+      font-weight: 700;
+      color: var(--amarelo);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+
+    .quiz-card {
+      background-color: var(--branco);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      padding: var(--sp-6);
+      max-width: 760px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .quiz-card__header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-6);
+      padding-bottom: var(--sp-4);
+      border-bottom: 1px solid var(--cinza-claro);
+    }
+    .quiz-card__icon {
+      width: 34px; height: 34px;
+      background-color: var(--azul-claro);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .quiz-card__title {
+      font-size: var(--h4);
+      font-weight: 700;
+      color: var(--azul-escuro);
+    }
+
+    .quiz__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-6) var(--sp-8);
+    }
+    .quiz__group { display: flex; flex-direction: column; gap: var(--sp-3); }
+    .quiz__group-label {
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      margin-bottom: var(--sp-1);
+      line-height: 1.4;
+    }
+    .quiz__options { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .quiz__option {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      cursor: pointer;
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--azul-escuro);
+      user-select: none;
+    }
+    .quiz__radio {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--cinza-claro);
+      background-color: #fff;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color var(--transition);
+    }
+    .quiz__radio.checked {
+      border-color: var(--amarelo);
+      background-color: var(--amarelo);
+    }
+    .quiz__radio.checked::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background-color: var(--azul-escuro);
+    }
+    .quiz__footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: var(--sp-6);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--cinza-claro);
+    }
+    .btn-avancar {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--azul-escuro);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      padding: var(--sp-2) var(--sp-3);
+      border-radius: 50%;
+      transition: background-color var(--transition);
+    }
+    .btn-avancar:hover { background-color: var(--azul-claro); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .adote { padding: var(--sp-6) var(--sp-4); }
+      .pet__top { grid-template-columns: 1fr; }
+      .pet__bottom { grid-template-columns: 1fr 1fr; }
+      .quiz__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .pet__bottom { grid-template-columns: 1fr; }
+      .quiz__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <a class="sidebar__profile" href="perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="login.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="#" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <section class="adote">
+
+        <!-- VIEW 1: PET PROFILE -->
+        <div id="view-pet">
+          <div class="adote-card">
+            <div class="pet__top">
+              <div>
+                <span class="pet__paw">🐾</span>
+                <div class="pet__photo">
+                  <img
+                    src="img/ycaro.png"
+                    alt="Ycaro, beagle"
+                  />
+                </div>
+              </div>
+              <div class="pet__info">
+                <p class="pet__desc">
+                  Ycaro é um beagle de 2 anos, castrado, muito brincalhão e cheio de energia. Adora passeios, carinho e companhia durante o dia. É um cão dócil, curioso e se dá bem com pessoas e outros animais. Está em busca de um lar seguro e cheio de amor para começar uma nova fase da sua vida.
+                </p>
+                <div class="pet__tags">
+                  <span class="pet__tag pet__tag--teal">Castrado</span>
+                  <span class="pet__tag pet__tag--amarelo">Porte Médio</span>
+                  <span class="pet__tag pet__tag--dark">Macho</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pet__bottom">
+              <div class="pet__name-block">
+                <span class="pet__name">Ycaro</span>
+                <span class="pet__breed">Beagle</span>
+              </div>
+              <div class="pet__meta">
+                <span class="pet__age">2 anos.</span>
+                <span class="pet__fav">Favorite ☆</span>
+              </div>
+              <button class="btn-interesse" id="btn-interesse">Tenho interesse!</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 2: QUESTIONÁRIO -->
+        <div id="view-quiz">
+          <div class="quiz__header">
+            <h1 class="quiz__title">🐾 Interesse em adotar</h1>
+          </div>
+
+          <div class="quiz-card">
+            <div class="quiz-card__header">
+              <div class="quiz-card__icon">
+                <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--azul-escuro)"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </div>
+              <span class="quiz-card__title">Preencha o nosso questionário de adoção</span>
+            </div>
+
+            <div class="quiz__grid">
+
+              <!-- Col 1 -->
+              <div>
+                <div class="quiz__group">
+                  <span class="quiz__group-label">Qual o tamanho da sua casa?</span>
+                  <div class="quiz__options">
+                    <label class="quiz__option">
+                      <div class="quiz__radio checked" data-group="casa"></div>
+                      Pequena (40–70 m²)
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="casa"></div>
+                      Média (80–150 m²)
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="casa"></div>
+                      Grande (150–300 m²)
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="casa"></div>
+                      Muito Grande (acima de 300 m²)
+                    </label>
+                  </div>
+                </div>
+
+                <div class="quiz__group" style="margin-top: var(--sp-6)">
+                  <span class="quiz__group-label">Sua casa tem quintal?</span>
+                  <div class="quiz__options">
+                    <label class="quiz__option">
+                      <div class="quiz__radio checked" data-group="quintal"></div>
+                      Sim, fechado
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="quintal"></div>
+                      Sim, aberto
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="quintal"></div>
+                      Não
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Col 2 -->
+              <div>
+                <div class="quiz__group">
+                  <span class="quiz__group-label">Tem crianças em casa?</span>
+                  <div class="quiz__options">
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="criancas"></div>
+                      Sim, menos de 5 anos
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="criancas"></div>
+                      Sim, acima de 5
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio checked" data-group="criancas"></div>
+                      Não
+                    </label>
+                  </div>
+                </div>
+
+                <div class="quiz__group" style="margin-top: var(--sp-6)">
+                  <span class="quiz__group-label">Tem outros animais?</span>
+                  <div class="quiz__options">
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="animais"></div>
+                      Sim, cães
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio checked" data-group="animais"></div>
+                      Sim, gatos
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="animais"></div>
+                      Sim, outro
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="animais"></div>
+                      Não
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Col 3 -->
+              <div>
+                <div class="quiz__group">
+                  <span class="quiz__group-label">Quantas horas por dia o animal ficaria sozinho?</span>
+                  <div class="quiz__options">
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="horas"></div>
+                      0-4 horas
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio checked" data-group="horas"></div>
+                      4-8 horas
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="horas"></div>
+                      Mais de 8h
+                    </label>
+                  </div>
+                </div>
+
+                <div class="quiz__group" style="margin-top: var(--sp-6)">
+                  <span class="quiz__group-label">Você aluga ou é dono do imóvel?</span>
+                  <div class="quiz__options">
+                    <label class="quiz__option">
+                      <div class="quiz__radio checked" data-group="imovel"></div>
+                      Sou proprietário
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="imovel"></div>
+                      Alugo e tenho autorização do proprietário
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="imovel"></div>
+                      Alugo e ainda não tenho autorização
+                    </label>
+                    <label class="quiz__option">
+                      <div class="quiz__radio" data-group="imovel"></div>
+                      Moro com familiares
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /quiz__grid -->
+
+            <div class="quiz__footer">
+              <button class="btn-avancar" id="btn-avancar" aria-label="Avançar">&#8594;</button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+  <script>
+    // Switch from pet profile to quiz
+    document.getElementById('btn-interesse').addEventListener('click', () => {
+      document.getElementById('view-pet').style.display = 'none';
+      document.getElementById('view-quiz').style.display = 'block';
+    });
+
+    // Radio button toggle within a group
+    document.querySelectorAll('.quiz__option').forEach(option => {
+      option.addEventListener('click', () => {
+        const radio = option.querySelector('.quiz__radio');
+        const group = radio.dataset.group;
+        // Uncheck all in same group
+        document.querySelectorAll(`.quiz__radio[data-group="${group}"]`).forEach(r => r.classList.remove('checked'));
+        // Check this one
+        radio.classList.add('checked');
+      });
+    });
+
+    // Advance button
+    document.getElementById('btn-avancar').addEventListener('click', () => {
+      alert('Questionário enviado! Entraremos em contato em breve. 🐾');
+    });
+  </script>
+
+</body>
+</html>

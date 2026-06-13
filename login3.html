@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projeto ARCA - Cadastro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    .cadastro-hero {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-10) var(--sp-8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 60vh;
+      position: relative;
+      overflow: hidden;
+    }
+    .cadastro-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.06' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+    .cadastro-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 640px;
+      background-color: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-8);
+      backdrop-filter: blur(2px);
+    }
+    .cadastro-card__label {
+      font-weight: 700;
+      color: var(--branco-bege);
+      margin-bottom: var(--sp-6);
+    }
+    .cadastro-card__title {
+      text-align: center;
+      font-size: clamp(1.25rem, 3vw, var(--h2));
+      font-weight: 700;
+      color: var(--branco-bege);
+      line-height: 1.3;
+      margin-bottom: var(--sp-8);
+    }
+    .cadastro-card__title .logo-arca { font-style: italic; }
+    .cadastro-card__subtitle {
+      font-size: var(--body);
+      font-weight: 700;
+      color: var(--branco-bege);
+      margin-bottom: var(--sp-4);
+    }
+    .rg-upload-btn {
+      display: inline-block;
+      background-color: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: var(--radius-md);
+      color: var(--branco-bege);
+      font-size: var(--body-sm);
+      font-weight: 600;
+      padding: var(--sp-3) var(--sp-4);
+      margin-bottom: var(--sp-6);
+      cursor: pointer;
+    }
+    .upload-box {
+      background-color: var(--branco-bege);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-6);
+    }
+    .upload-box__title {
+      font-size: var(--body);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      margin-bottom: var(--sp-4);
+    }
+    .upload-dropzone {
+      border: 2px dashed var(--cinza-claro);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: var(--sp-2);
+      padding: var(--sp-8) var(--sp-4);
+      color: var(--cinza-medio);
+      font-size: var(--body-sm);
+      cursor: pointer;
+    }
+    .upload-dropzone__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      background-color: var(--azul-escuro);
+      color: var(--branco-bege);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--sp-2);
+    }
+    .upload-dropzone__select { color: var(--azul-escuro); font-weight: 700; }
+    .upload-submit {
+      width: 100%;
+      margin-top: var(--sp-6);
+      background-color: var(--branco-bege);
+      border: 1px solid var(--cinza-claro);
+      border-radius: var(--radius-md);
+      color: var(--azul-escuro);
+      font-size: var(--h4);
+      font-weight: 700;
+      padding: var(--sp-3);
+      cursor: pointer;
+      transition: background-color var(--transition);
+    }
+    .upload-submit:hover { background-color: var(--azul-claro); }
+    .cadastro-form__footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: var(--sp-6);
+      position: relative;
+    }
+    .cadastro-form__nav {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      color: var(--branco-bege);
+      transition: background-color var(--transition);
+    }
+    .cadastro-form__nav:hover { background-color: rgba(255,255,255,.15); }
+    .cadastro-form__nav--prev { left: 0; }
+    .cadastro-form__nav--next { right: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <a class="sidebar__profile" href="perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="#" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- CADASTRO -->
+      <section class="cadastro-hero">
+        <div class="cadastro-card">
+          <p class="cadastro-card__label">Cadastro</p>
+
+          <h1 class="cadastro-card__title">
+            Crie sua conta no<br>
+            programa <span class="logo-arca">ARCA</span>
+          </h1>
+
+          <h2 class="cadastro-card__subtitle">Confirmação de dados</h2>
+
+          <button type="button" class="rg-upload-btn">Envie um arquivo legível do seu RG</button>
+
+          <div class="upload-box">
+            <h3 class="upload-box__title">Upload de arquivos</h3>
+
+            <label for="rg-file" class="upload-dropzone">
+              <div class="upload-dropzone__icon">
+                <svg class="icon-svg" viewBox="0 0 24 24" style="width:24px;height:24px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+              </div>
+              <span>Arraste o arquivo aqui</span>
+              <span>Ou</span>
+              <span class="upload-dropzone__select">Clique para selecionar</span>
+              <input type="file" id="rg-file" name="rg-file" style="display:none" />
+            </label>
+
+            <button type="button" class="upload-submit">Enviar</button>
+          </div>
+
+          <div class="cadastro-form__footer">
+            <a href="login2.html" class="cadastro-form__nav cadastro-form__nav--prev" aria-label="Etapa anterior">
+              <svg class="icon-svg" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+            </a>
+            <a href="index.html" class="cadastro-form__nav cadastro-form__nav--next" aria-label="Próxima etapa">
+              <svg class="icon-svg" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+  <script src="arca.js"></script>
+</body>
+</html>

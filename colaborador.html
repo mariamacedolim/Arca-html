@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seja nosso Colaborador — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    /* ── COLABORADOR SECTION ── */
+    .colaborador {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-10) var(--sp-8);
+      position: relative;
+      overflow: hidden;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-8);
+    }
+    .colaborador::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.06' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+
+    .colaborador__header {
+      position: relative;
+      z-index: 1;
+    }
+    .colaborador__title {
+      font-size: clamp(1.5rem, 3.5vw, var(--h2));
+      font-weight: 700;
+      color: var(--amarelo);
+      margin-bottom: var(--sp-2);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+    .colaborador__title .paw {
+      font-size: 1.4em;
+    }
+    .colaborador__subtitle {
+      font-size: var(--body-sm);
+      color: var(--branco-bege);
+      font-weight: 400;
+      opacity: 0.85;
+    }
+
+    .colaborador__body {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--sp-8);
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+    .colaborador__text {
+      font-size: var(--body);
+      color: var(--branco-bege);
+      font-weight: 600;
+      line-height: 1.65;
+      max-width: 480px;
+    }
+    .colaborador__images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-4);
+      flex-shrink: 0;
+    }
+    .colaborador__img {
+      width: 160px;
+      height: 200px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background-color: var(--amarelo);
+    }
+    .colaborador__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .colaborador__divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,.15);
+      position: relative;
+      z-index: 1;
+    }
+
+    .colaborador__cta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+    .colaborador__cta-label {
+      font-size: var(--body);
+      color: var(--branco-bege);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+    .colaborador__cta-label .paw {
+      font-size: 1.1em;
+    }
+    .btn-formulario {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--amarelo);
+      color: var(--azul-escuro);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: var(--body);
+      padding: var(--sp-3) var(--sp-6);
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity var(--transition), transform var(--transition);
+      width: fit-content;
+    }
+    .btn-formulario:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+    .btn-formulario:active {
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .colaborador {
+        padding: var(--sp-8) var(--sp-5);
+      }
+      .colaborador__body {
+        grid-template-columns: 1fr;
+      }
+      .colaborador__images {
+        max-width: 320px;
+      }
+      .colaborador__img {
+        width: 100%;
+        height: 180px;
+      }
+    }
+    @media (max-width: 600px) {
+      .colaborador {
+        padding: var(--sp-6) var(--sp-4);
+      }
+      .colaborador__img {
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <a class="sidebar__profile" href="perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="login.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="#" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <section class="colaborador">
+
+        <div class="colaborador__header">
+          <h1 class="colaborador__title">
+            <span class="paw">🐾</span> Seja nosso colaborador
+          </h1>
+          <p class="colaborador__subtitle">Sua colaboração ajuda a transformar a vida de animais que esperam por cuidado, proteção e um novo lar.</p>
+        </div>
+
+        <div class="colaborador__body">
+          <p class="colaborador__text">
+            Os colaboradores do Projeto ARCA ajudam a ampliar o impacto das ações realizadas em prol da proteção animal. Empresas, organizações e parceiros apoiam o projeto por meio de recursos, serviços e iniciativas que contribuem para o cuidado, resgate e adoção responsável, além de fortalecer a divulgação de suas marcas em um espaço dedicado à causa animal.
+          </p>
+
+          <div class="colaborador__images">
+            <div class="colaborador__img">
+              <img
+                src="img/gold.png"
+                alt="Cachorro poodle"
+              />
+            </div>
+            <div class="colaborador__img">
+              <img
+                src="img/mr.png"
+                alt="Filhote de golden retriever"
+              />
+            </div>
+          </div>
+        </div>
+
+        <hr class="colaborador__divider" />
+
+        <div class="colaborador__cta">
+          <p class="colaborador__cta-label">
+            <span class="paw">🐾</span> Tem uma ONG ou quer ser colaborador?
+          </p>
+          <a class="btn-formulario" href="colaborador2.html">Preencha nosso formulário</a>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+</body>
+</html>

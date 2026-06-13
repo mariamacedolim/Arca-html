@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usuários Admin — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    .sidebar { width: 180px; }
+    .sidebar__nav-item { font-size: 0.8rem; }
+    .badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      background-color: #c0392b; color: #fff;
+      font-size: 0.6rem; font-weight: 700;
+      border-radius: 50%; width: 16px; height: 16px;
+      margin-left: auto; flex-shrink: 0;
+    }
+
+    .usuarios-main {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-8);
+      min-height: calc(100vh - var(--topbar-h));
+      position: relative;
+    }
+    .usuarios-main::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.05' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat; pointer-events: none;
+    }
+
+    .usuarios__header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-6);
+      margin-bottom: var(--sp-6);
+      position: relative; z-index: 1;
+      flex-wrap: wrap;
+    }
+    .usuarios__title {
+      font-size: clamp(1.5rem, 3vw, var(--h1));
+      font-weight: 700;
+      color: var(--amarelo);
+      flex-shrink: 0;
+    }
+    .usuarios__search {
+      flex: 1;
+      min-width: 240px;
+      display: flex;
+      align-items: center;
+      background-color: var(--branco-bege);
+      border-radius: var(--radius-pill);
+      padding: var(--sp-2) var(--sp-4);
+      gap: var(--sp-2);
+      box-shadow: var(--shadow-sm);
+    }
+    .usuarios__search input {
+      border: none;
+      background: none;
+      outline: none;
+      font-family: var(--font-ui);
+      font-size: var(--body-sm);
+      font-weight: 500;
+      color: var(--cinza-escuro);
+      width: 100%;
+    }
+    .usuarios__search input::placeholder { color: var(--cinza-medio); }
+
+    /* Table */
+    .table-wrap {
+      position: relative; z-index: 1;
+      background-color: var(--azul-escuro);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead tr {
+      background-color: var(--branco-bege);
+    }
+    thead th {
+      padding: var(--sp-4) var(--sp-5);
+      text-align: center;
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--azul-escuro);
+      border-right: 1px solid var(--cinza-claro);
+    }
+    thead th:last-child { border-right: none; }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background-color var(--transition);
+    }
+    tbody tr:hover { background-color: rgba(255,255,255,0.04); }
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody td {
+      padding: var(--sp-4) var(--sp-5);
+      text-align: center;
+      font-size: var(--body-sm);
+      font-weight: 600;
+      color: var(--branco-bege);
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    tbody td:last-child { border-right: none; }
+    tbody td:first-child { text-align: center; font-weight: 700; }
+
+    .status-pill {
+      display: inline-block;
+      padding: var(--sp-1) var(--sp-4);
+      border-radius: var(--radius-pill);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      min-width: 80px;
+      text-align: center;
+    }
+    .status-ativo     { background-color: #2E7D32; color: #fff; }
+    .status-suspenso  { background-color: #c0392b; color: #fff; }
+    .status-aguardando{ background-color: var(--amarelo); color: var(--azul-escuro); }
+
+    .btn-plus {
+      width: 30px; height: 30px;
+      background-color: var(--amarelo);
+      border: none; border-radius: 50%;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--azul-escuro);
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: opacity var(--transition);
+    }
+    .btn-plus:hover { opacity: 0.8; }
+
+    .td-link {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .td-link:hover { color: var(--amarelo); }
+
+    @media (max-width: 900px) {
+      .usuarios-main { padding: var(--sp-5) var(--sp-3); }
+      .table-wrap { overflow-x: auto; }
+      table { min-width: 600px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" aria-label="Navegação admin">
+      <a class="sidebar__profile" href="admin-perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="admin-dashboard.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Dashboard
+            <span class="badge">3</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="admin-usuarios.html" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Usuários
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="admin-perfil.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Perfil
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="adote.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adoção
+            <span class="badge">9</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+            <span class="badge">9</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+            <span class="badge">21</span>
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="usuarios-main">
+        <div class="usuarios__header">
+          <h1 class="usuarios__title">Usuários</h1>
+          <div class="usuarios__search">
+            <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input" placeholder="Pesquise o nome, telefone, email, data e status." />
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="users-table">
+            <thead>
+              <tr>
+                <th>Nome completo</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Data de cadastro</th>
+                <th>Status da conta</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <!-- rows injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+  <script>
+    const users = [
+      { nome: 'Ana Paula Souza',     email: 'anapaulaS@gmail.com',  tel: '(27) 99812-3344', data: '02/01/2026', status: 'Ativo' },
+      { nome: 'Carlos Henrique Lima',email: 'carlosHL@gmail.com',   tel: '(27) 98765-4321', data: '08/01/2026', status: 'Ativo' },
+      { nome: 'Fernanda Oliveira',   email: 'fernandaO@gmail.com',  tel: '(27) 99234-5678', data: '15/01/2026', status: 'Suspenso' },
+      { nome: 'Beatriz Santos',      email: 'beatrizS@gmail.com',   tel: '(27) 99567-8901', data: '14/02/2026', status: 'Aguardando' },
+      { nome: 'Fulaninho Da Silva',  email: 'fulaninho@gmail.com',  tel: '(27) 1006-2008',  data: '10/06/2008', status: 'Ativo' },
+      { nome: 'Fulaninho Da Silva',  email: 'fulaninho@gmail.com',  tel: '(27) 1006-2008',  data: '10/06/2008', status: 'Ativo' },
+      { nome: 'Fulaninho Da Silva',  email: 'fulaninho@gmail.com',  tel: '(27) 1006-2008',  data: '10/06/2008', status: 'Ativo' },
+      { nome: 'Fulaninho Da Silva',  email: 'fulaninho@gmail.com',  tel: '(27) 1006-2008',  data: '10/06/2008', status: 'Ativo' },
+      { nome: 'Fulaninho Da Silva',  email: 'fulaninho@gmail.com',  tel: '(27) 1006-2008',  data: '10/06/2008', status: 'Ativo' },
+      { nome: 'Fulaninho Da Silva',  email: 'fulaninho@gmail.com',  tel: '(27) 1006-2008',  data: '10/06/2008', status: 'Ativo' },
+      { nome: 'Fulaninho Da Silva',  email: 'fulaninho@gmail.com',  tel: '(27) 1006-2008',  data: '10/06/2008', status: 'Ativo' },
+    ];
+
+    function statusClass(s) {
+      if (s === 'Ativo') return 'status-ativo';
+      if (s === 'Suspenso') return 'status-suspenso';
+      return 'status-aguardando';
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = data.map((u, i) => `
+        <tr>
+          <td class="td-link" onclick="window.location.href='admin-perfil.html'">${u.nome}</td>
+          <td>${u.email}</td>
+          <td>${u.tel}</td>
+          <td>${u.data}</td>
+          <td><span class="status-pill ${statusClass(u.status)}">${u.status}</span></td>
+          <td><button class="btn-plus" title="Ver detalhes" onclick="window.location.href='admin-perfil.html'">+</button></td>
+        </tr>
+      `).join('');
+    }
+
+    renderTable(users);
+
+    document.getElementById('search-input').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      const filtered = users.filter(u =>
+        u.nome.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q) ||
+        u.tel.includes(q) ||
+        u.data.includes(q) ||
+        u.status.toLowerCase().includes(q)
+      );
+      renderTable(filtered);
+    });
+  </script>
+
+</body>
+</html>

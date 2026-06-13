@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adote — Projeto ARCA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Lakki+Reddy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="arca.css" />
+  <style>
+    /* ── ADOTE PAGE EXTRAS ── */
+    .adote-hero {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-8) var(--sp-8) var(--sp-6);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-8);
+      align-items: start;
+      position: relative;
+      overflow: hidden;
+    }
+    .adote-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='80' font-size='60' opacity='0.06' fill='%23FFD354'%3E🐾%3C/text%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+    .adote-hero__text { position: relative; z-index: 1; }
+    .adote-hero__title {
+      font-size: clamp(1.75rem, 4vw, var(--h1));
+      font-weight: 700;
+      color: var(--amarelo);
+      margin-bottom: var(--sp-2);
+      line-height: 1.15;
+    }
+    .adote-hero__subtitle {
+      font-size: var(--body-sm);
+      color: var(--branco-bege);
+      opacity: 0.85;
+    }
+    .adote-hero__steps {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+      padding-top: var(--sp-2);
+    }
+    .adote-hero__step {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      font-size: var(--body);
+      color: var(--branco-bege);
+      font-weight: 600;
+    }
+    .adote-hero__step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--branco-bege);
+      flex-shrink: 0;
+    }
+
+    /* ── FILTRO ── */
+    .filtro-bar {
+      background-color: var(--azul-escuro);
+      padding: 0 var(--sp-8) var(--sp-6);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .filtro-bar__inner {
+      background-color: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-3) var(--sp-5);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      flex-wrap: wrap;
+    }
+    .filtro-bar__label {
+      font-size: var(--body);
+      font-weight: 700;
+      color: var(--branco-bege);
+      flex-shrink: 0;
+    }
+    .filtro-bar__select {
+      appearance: none;
+      background-color: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: var(--radius-pill);
+      color: var(--branco-bege);
+      font-size: var(--body-sm);
+      font-weight: 600;
+      padding: var(--sp-1) var(--sp-5) var(--sp-1) var(--sp-3);
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23F0E5D4' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+    }
+    .filtro-bar__select:focus { outline: 2px solid var(--amarelo); }
+    .filtro-bar__paw {
+      margin-left: auto;
+      font-size: 1.4rem;
+      opacity: 0.6;
+    }
+
+    /* ── GRID ANIMAIS ── */
+    .animais-section {
+      background-color: var(--azul-escuro);
+      padding: var(--sp-8);
+    }
+    .animais-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-5);
+    }
+    .animal-card {
+      background-color: rgba(255,255,255,.05);
+      border: 1.5px solid rgba(255,211,84,.3);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .animal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--amarelo);
+    }
+    .animal-card__img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      display: block;
+    }
+    .animal-card__body {
+      padding: var(--sp-3) var(--sp-3) var(--sp-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+    }
+    .animal-card__info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .animal-card__name {
+      font-size: var(--body-sm);
+      font-weight: 700;
+      color: var(--branco-bege);
+    }
+    .animal-card__paw {
+      font-size: 1rem;
+      opacity: 0.6;
+    }
+    .btn-saber {
+      background-color: var(--amarelo);
+      color: var(--azul-escuro);
+      border: none;
+      border-radius: var(--radius-pill);
+      font-size: var(--body-sm);
+      font-weight: 700;
+      padding: var(--sp-1) var(--sp-4);
+      cursor: pointer;
+      align-self: flex-start;
+      transition: opacity var(--transition);
+    }
+    .btn-saber:hover { opacity: 0.85; }
+
+    @media (max-width: 1100px) {
+      .animais-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .adote-hero { grid-template-columns: 1fr; padding: var(--sp-8) var(--sp-5); }
+      .animais-grid { grid-template-columns: repeat(2, 1fr); }
+      .animais-section { padding: var(--sp-6) var(--sp-4); }
+      .filtro-bar { padding: 0 var(--sp-4) var(--sp-5); }
+    }
+    @media (max-width: 520px) {
+      .animais-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="topbar__menu-btn" aria-label="Abrir menu">
+      <svg class="icon-svg" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="topbar__logo logo-arca" href="index.html">ARCA</a>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" aria-label="Navegação principal">
+      <a class="sidebar__profile" href="perfil.html" style="text-decoration:none;display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <div class="sidebar__profile-avatar">
+          <svg class="icon-svg" viewBox="0 0 24 24" style="color:var(--cinza-medio)"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <span style="color:var(--azul-escuro)">Perfil</span>
+      </a>
+
+      <ul class="sidebar__nav">
+        <li>
+          <a class="sidebar__nav-item" href="index.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21H15v-5h-6v5H3z"/></svg>
+            Página Inicial
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="login.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Entrar/Login
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item ativo" href="adote.html" aria-current="page">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Adote
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="castracao.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Castração
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="resgate-1.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            Resgate e Denúncia
+          </a>
+        </li>
+        <li>
+          <a class="sidebar__nav-item" href="colaborador.html">
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Colaborador
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar__footer">
+        <a class="sidebar__nav-item" href="ajuda.html" style="padding-left:0">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Ajuda
+        </a>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- HERO DA ADOÇÃO -->
+      <section class="adote-hero">
+        <div class="adote-hero__text">
+          <h1 class="adote-hero__title">Adoção Responsável</h1>
+          <p class="adote-hero__subtitle">🐾 Mais amor, menos abandono.</p>
+        </div>
+        <div class="adote-hero__steps">
+          <div class="adote-hero__step">
+            <span class="adote-hero__step-num">1</span>
+            <span>Escolha o animal que combina com você.</span>
+          </div>
+          <div class="adote-hero__step">
+            <span class="adote-hero__step-num">2</span>
+            <span>Verifique os requesitos</span>
+          </div>
+          <div class="adote-hero__step">
+            <span class="adote-hero__step-num">3</span>
+            <span>Aguarde a aprovação e receba seu novo companheiro.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILTRO -->
+      <div class="filtro-bar">
+        <div class="filtro-bar__inner">
+          <span class="filtro-bar__label">Filtro</span>
+          <select class="filtro-bar__select" aria-label="Espécie">
+            <option value="">Espécie</option>
+            <option value="cachorro">Cachorro</option>
+            <option value="gato">Gato</option>
+          </select>
+          <select class="filtro-bar__select" aria-label="Sexo">
+            <option value="">Sexo</option>
+            <option value="macho">Macho</option>
+            <option value="femea">Fêmea</option>
+          </select>
+          <select class="filtro-bar__select" aria-label="Porte">
+            <option value="">Porte</option>
+            <option value="pequeno">Pequeno</option>
+            <option value="medio">Médio</option>
+            <option value="grande">Grande</option>
+          </select>
+          <select class="filtro-bar__select" aria-label="Idade">
+            <option value="">Idade</option>
+            <option value="filhote">Filhote</option>
+            <option value="adulto">Adulto</option>
+            <option value="idoso">Idoso</option>
+          </select>
+          <span class="filtro-bar__paw">🐾</span>
+        </div>
+      </div>
+
+      <!-- GRID DE ANIMAIS -->
+      <section class="animais-section">
+        <div class="animais-grid">
+
+          <!-- Card 1 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="img/ycaro.png"
+              alt="Ycaro" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Ycaro, 2 anos.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=400&q=80"
+              alt="Lua" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Lua, 1 ano.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=400&q=80"
+              alt="Thomas" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Thomas, 1 ano.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&q=80"
+              alt="Alberto" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Alberto, 9 meses.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&q=80"
+              alt="Saiko" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Saiko, 2 anos.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&q=80"
+              alt="Batman" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Batman, 3 anos.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+          <!-- Card 7 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="https://static.vecteezy.com/system/resources/thumbnails/008/951/892/small_2x/cute-puppy-pomeranian-mixed-breed-pekingese-dog-run-on-the-grass-with-happiness-photo.jpg"
+              alt="Totó" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Totó, 1 ano.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+          <!-- Card 8 -->
+          <div class="animal-card">
+            <img class="animal-card__img"
+              src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&q=80"
+              alt="Jujuba" />
+            <div class="animal-card__body">
+              <div class="animal-card__info">
+                <span class="animal-card__name">Jujuba, 5 meses.</span>
+                <span class="animal-card__paw">🐾</span>
+              </div>
+              <button class="btn-saber" onclick="window.location.href='adote2.html'">Saber mais</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer__logo logo-arca">ARCA</span>
+    <span>© 2026 Projeto ARCA — Universidade Vila Velha</span>
+    <span>ProjetoArca.com.br</span>
+  </footer>
+
+</body>
+</html>
